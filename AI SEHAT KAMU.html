@@ -1,0 +1,1645 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Sehat Kamu — Menu Utama Pemeriksaan Kesehatan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f1ff;
+      --surface: #ffffff;
+      --surface-soft: #f8f5ff;
+      --sage-soft: #efe9fe;
+      --sage-strip: #f3eeff;
+      --border: #dfd3fb;
+      --border-strong: #d7c8fa;
+      --ink: #21144c;
+      --muted: #5d5084;
+      --subtle: #72659a;
+      --sage: #5e3ec7;
+      --sage-dark: #21144c;
+      --sage-light: #8c6ee4;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --green-bg: #ecfdf5;
+      --green-border: #a7f3d0;
+      --green-text: #065f46;
+      --yellow-bg: #fefce8;
+      --yellow-border: #fef08a;
+      --yellow-text: #854d0e;
+      --red-bg: #fef2f2;
+      --red-border: #fecaca;
+      --red-text: #991b1b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+    .hidden { display: none !important; }
+
+    /* Header + Scroll Progress */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(245, 241, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      max-width: 1152px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+    .brand {
+      background: none;
+      border: 0;
+      font: inherit;
+      font-size: 1.125rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.16s var(--ease);
+    }
+    .brand span { color: var(--sage); }
+    .brand:hover { transform: scale(1.03); }
+    .brand:active { transform: scale(0.96); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-item {
+      background: none;
+      border: 0;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      cursor: pointer;
+      padding: 4px 0;
+      white-space: nowrap;
+      transition: color 0.15s ease, transform 0.15s var(--ease);
+    }
+    .nav-item:hover { color: var(--sage); transform: translateY(-1.5px); }
+    .nav-item:active { transform: scale(0.95); }
+
+    .scroll-bar {
+      height: 2px;
+      width: 100%;
+      background: linear-gradient(90deg, #45298e, #7a5af8, #b197fc);
+      transform-origin: left center;
+      transform: scaleX(0);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1152px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 24px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    /* Buttons */
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border: 0;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #ffffff;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+      background: #21144c;
+      box-shadow: 0 8px 20px -8px rgba(33, 20, 76, 0.48);
+      transition: transform 0.16s var(--ease), background-color 0.16s ease;
+    }
+    .btn-cta:hover { transform: translateY(-2px) scale(1.025); background: #352175; }
+    .btn-cta:active { transform: scale(0.96); }
+
+    .btn-hero-white {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: 0;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+      background: #ffffff;
+      box-shadow: 0 10px 24px -8px rgba(33, 20, 76, 0.34);
+      transition: transform 0.16s var(--ease), background-color 0.16s ease;
+    }
+    .btn-hero-white:hover { transform: translateY(-2px) scale(1.025); background: #f5f1ff; }
+    .btn-hero-white:active { transform: scale(0.96); }
+
+    .btn-hero-glass {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #ffffff;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, transform 0.16s var(--ease);
+    }
+    .btn-hero-glass:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-1.5px); }
+    .btn-hero-glass:active { transform: scale(0.96); }
+
+    .btn-soft {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--sage-soft);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, transform 0.16s var(--ease);
+    }
+    .btn-soft:hover { background: #e2d6fc; transform: translateX(-2px) scale(1.02); }
+    .btn-soft:active { transform: scale(0.95); }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: #ffffff;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, transform 0.16s var(--ease);
+    }
+    .btn-outline:hover { background: var(--sage-soft); transform: translateY(-1px) scale(1.02); }
+    .btn-outline:active { transform: scale(0.95); }
+
+    /* Hero Showcase */
+    .hero-card {
+      position: relative;
+      border-radius: 28px;
+      border: 1px solid rgba(69, 41, 142, 0.25);
+      background: linear-gradient(135deg, #43278c 0%, #6242b6 52%, #8c6ee4 100%);
+      color: #ffffff;
+      box-shadow: 0 22px 50px -20px rgba(69, 41, 142, 0.42);
+      overflow: hidden;
+    }
+    .bg-orbs {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-orb-top {
+      position: absolute;
+      top: -96px;
+      right: -112px;
+      width: 420px;
+      height: 420px;
+      border-radius: 999px;
+      background: rgba(232, 222, 254, 0.75);
+      will-change: transform;
+    }
+    .bg-orb-bottom {
+      position: absolute;
+      bottom: -140px;
+      left: -112px;
+      width: 360px;
+      height: 360px;
+      border-radius: 999px;
+      border: 32px solid rgba(228, 215, 253, 0.8);
+      will-change: transform;
+    }
+    main, footer { position: relative; z-index: 1; }
+    .hero-ring-top {
+      position: absolute;
+      left: -56px;
+      top: -80px;
+      width: 224px;
+      height: 224px;
+      border-radius: 999px;
+      border: 18px solid rgba(255, 255, 255, 0.1);
+      pointer-events: none;
+      will-change: transform;
+    }
+    .hero-ring {
+      position: absolute;
+      right: -64px;
+      bottom: -96px;
+      width: 320px;
+      height: 320px;
+      border-radius: 999px;
+      border: 26px solid rgba(255, 255, 255, 0.1);
+      pointer-events: none;
+      will-change: transform;
+    }
+    .hero-top {
+      position: relative;
+      z-index: 1;
+      padding: 40px 48px 32px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 32px;
+      align-items: center;
+    }
+    .hero-title {
+      font-size: clamp(1.85rem, 3.2vw, 2.625rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      color: #ffffff;
+      text-wrap: balance;
+    }
+    .hero-title span { color: #e7dfff; }
+    .hero-desc {
+      margin-top: 16px;
+      font-size: 1rem;
+      color: #eae2ff;
+      max-width: 500px;
+      line-height: 1.65;
+    }
+    .hero-actions {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* Phone Mockup & Floating Micro-Cards */
+    .mockup-stage {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      margin-left: auto;
+      padding: 8px 0;
+    }
+    .phone-frame {
+      width: 240px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 4px solid #1e1242;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 24px 48px -16px rgba(33, 20, 76, 0.38);
+      cursor: pointer;
+      transition: transform 0.2s var(--ease), box-shadow 0.2s ease;
+    }
+    .phone-frame:hover {
+      transform: translateY(-6px) rotate(-1deg) scale(1.02);
+      box-shadow: 0 30px 54px -16px rgba(33, 20, 76, 0.45);
+    }
+    .phone-frame:active { transform: scale(0.975); }
+
+    .phone-head {
+      background: linear-gradient(135deg, #45298e, #6e4ec9);
+      color: #ffffff;
+      padding: 16px 20px 22px;
+    }
+    .phone-toprow {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.6875rem;
+      opacity: 0.9;
+    }
+    .phone-name {
+      margin-top: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .phone-metric-row {
+      margin-top: 12px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .phone-value { font-size: 1.875rem; font-weight: 700; line-height: 1; }
+    .phone-list { padding: 14px 16px; font-size: 0.75rem; background: #faf8ff; }
+    .phone-list-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 0;
+      border-bottom: 1px solid #ede6ff;
+    }
+    .phone-list-row:last-child { border-bottom: 0; }
+    .phone-list-row span:first-child { color: var(--muted); font-weight: 500; }
+    .phone-list-row span:last-child { color: var(--sage); font-weight: 600; }
+
+    .float-chip {
+      position: absolute;
+      z-index: 2;
+      background: #faf8ff;
+      border: 1px solid #dfd3fb;
+      border-radius: 16px;
+      padding: 10px 14px;
+      box-shadow: 0 14px 30px -10px rgba(33, 20, 76, 0.28);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: transform 0.18s var(--ease);
+    }
+    .float-chip:hover { transform: translateY(-4px) scale(1.05); }
+    .float-chip:active { transform: scale(0.95); }
+    .float-left { right: calc(50% + 132px); top: 56px; }
+    .float-right { left: calc(50% + 132px); bottom: 40px; }
+    .float-label { font-size: 0.6875rem; color: var(--muted); font-weight: 500; }
+    .float-val { margin-top: 2px; font-size: 0.75rem; font-weight: 700; color: var(--ink); }
+
+    /* Hero Feature Strip */
+    .hero-strip {
+      position: relative;
+      background: var(--sage-strip);
+      color: var(--ink);
+      border-top: 1px solid #e2d6fc;
+      padding: 26px 48px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+    .strip-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 8px;
+      margin: -8px;
+      border-radius: 12px;
+      transition: background-color 0.16s ease, transform 0.16s var(--ease);
+    }
+    .strip-item:hover { background: rgba(255, 255, 255, 0.75); transform: translateY(-2px) scale(1.015); }
+    .strip-icon {
+      padding: 8px;
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--sage);
+      border: 1px solid var(--border);
+      display: inline-flex;
+      flex-shrink: 0;
+    }
+    .strip-item h2 { font-size: 0.875rem; font-weight: 600; color: var(--ink); }
+    .strip-item p { margin-top: 3px; font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+
+    /* Menu Cards */
+    .section-head h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+    .section-head h2 span { color: var(--sage); }
+    .section-head p { margin-top: 4px; font-size: 0.875rem; color: var(--muted); }
+
+    .cards-grid {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .exam-card {
+      background: #efe9ff;
+      border: 1px solid #ddd0fc;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 12px 30px -14px rgba(69, 41, 142, 0.16);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s var(--ease), box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .exam-card.card-cream { background: #ffffff; border-color: #dfd3fb; }
+    .exam-card.card-mint { background: #eae1ff; border-color: #d6c6fb; }
+    .exam-card:hover {
+      transform: translateY(-6px) scale(1.018);
+      border-color: #b9a0fa;
+      box-shadow: 0 20px 40px -16px rgba(69, 41, 142, 0.24);
+    }
+    .exam-card:active { transform: scale(0.985); }
+
+    .card-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--sage);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 6px rgba(33, 20, 76, 0.06);
+      transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s var(--ease);
+    }
+    .exam-card.card-cream .card-badge { background: #f3eeff; }
+    .exam-card:hover .card-badge { background: #21144c; color: #ffffff; transform: rotate(-6deg) scale(1.08); }
+    .exam-card h3 { font-size: 1.125rem; font-weight: 700; color: var(--ink); }
+    .exam-card .card-desc { margin-top: 8px; font-size: 0.875rem; color: #53467b; line-height: 1.6; }
+    .exam-card .card-meta {
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(33, 20, 76, 0.08);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .exam-card .btn-cta { width: 100%; margin-top: 22px; justify-content: space-between; }
+    .arrow-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(168, 139, 250, 0.3);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Workspace Panel */
+    .surface-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 14px 36px -14px rgba(69, 41, 142, 0.14);
+    }
+    .toolbar {
+      padding: 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .toolbar-left { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .toolbar-title { font-size: 1.25rem; font-weight: 700; }
+    .toolbar-title span { color: var(--sage); }
+
+    .segmented {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px;
+      background: var(--sage-soft);
+      border-radius: 999px;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    .seg-btn {
+      border: 0;
+      background: transparent;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, color 0.15s ease, transform 0.14s var(--ease);
+    }
+    .seg-btn:hover { color: var(--ink); transform: scale(1.03); }
+    .seg-btn:active { transform: scale(0.95); }
+    .seg-btn.active {
+      background: #21144c;
+      color: #ffffff;
+      box-shadow: 0 1px 3px rgba(33, 20, 76, 0.18);
+    }
+
+    .check-grid {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 32px;
+      align-items: stretch;
+    }
+
+    .form-card { padding: 26px; }
+    .panel-heading { font-size: 1.125rem; font-weight: 700; }
+    .panel-heading span { color: var(--sage); }
+    .panel-sub { margin-top: 4px; font-size: 0.875rem; color: var(--muted); }
+
+    .field { margin-top: 16px; }
+    .field label, .field-label { display: block; font-size: 0.875rem; font-weight: 500; color: #2e2061; margin-bottom: 6px; }
+    .input {
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font: inherit;
+      font-size: 0.875rem;
+      color: var(--ink);
+      background: var(--surface-soft);
+      transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .input:focus {
+      outline: none;
+      background: #ffffff;
+      border-color: var(--sage);
+      box-shadow: 0 0 0 3px rgba(94, 62, 199, 0.18);
+    }
+    .input.has-error { border-color: #ef4444; }
+    .input-wrap { position: relative; display: flex; align-items: center; }
+    .input-wrap .input { padding-right: 68px; }
+    .unit-suffix {
+      position: absolute;
+      right: 14px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--subtle);
+      pointer-events: none;
+    }
+    .field-hint { margin-top: 6px; font-size: 0.75rem; color: var(--subtle); }
+    .field-error { margin-top: 6px; font-size: 0.75rem; font-weight: 500; color: #b91c1c; }
+
+    .sex-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 4px; background: var(--sage-soft); border-radius: 999px; }
+    .form-actions { margin-top: 20px; display: flex; gap: 12px; }
+    .form-actions .btn-cta { flex: 1; }
+
+    /* Diagnosis Panel */
+    .diag-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    .diag-head {
+      padding: 24px 28px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+    }
+    .diag-empty-body {
+      flex: 1;
+      padding: 48px 24px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .diag-empty-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: var(--sage-soft);
+      color: var(--sage);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      transition: transform 0.16s var(--ease);
+    }
+    .diag-empty-icon:hover { transform: scale(1.1) rotate(-4deg); }
+    .diag-legend {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      font-size: 0.75rem;
+    }
+    .diag-legend > div {
+      padding: 16px 22px;
+      border-right: 1px solid var(--border);
+      transition: transform 0.14s var(--ease);
+    }
+    .diag-legend > div:last-child { border-right: 0; }
+    .diag-legend > div:hover { transform: translateY(-2px); }
+
+    .diag-banner {
+      flex: 1;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      animation: popIn 0.28s var(--ease);
+    }
+    .diag-banner.green { background: var(--green-bg); color: var(--green-text); }
+    .diag-banner.yellow { background: var(--yellow-bg); color: var(--yellow-text); }
+    .diag-banner.red { background: var(--red-bg); color: var(--red-text); }
+
+    .diag-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .diag-status-wrap { display: flex; align-items: center; gap: 12px; }
+    .diag-status-title { font-size: 1.875rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+    .diag-measure { text-align: right; }
+    .diag-measure-num { font-size: 1.875rem; font-weight: 600; color: #0f172a; line-height: 1.1; }
+    .diag-rec { margin-top: 20px; font-size: 0.875rem; line-height: 1.65; color: var(--ink); }
+    .diag-meta {
+      padding: 20px 28px;
+      background: var(--surface-soft);
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      font-size: 0.875rem;
+    }
+    .diag-meta dt { font-size: 0.75rem; color: var(--subtle); }
+    .diag-meta dd { margin-top: 2px; font-weight: 600; color: var(--ink); word-break: break-word; }
+
+    /* Status Tag */
+    .status-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .status-tag.green { background: var(--green-bg); border-color: var(--green-border); color: var(--green-text); }
+    .status-tag.yellow { background: var(--yellow-bg); border-color: var(--yellow-border); color: var(--yellow-text); }
+    .status-tag.red { background: var(--red-bg); border-color: var(--red-border); color: var(--red-text); }
+
+    /* History Section */
+    .history-card { padding: 26px; }
+    .history-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .history-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .search-box { width: 240px; padding: 7px 12px; }
+    .history-filter-row {
+      padding: 16px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .table-wrap { overflow-x: auto; margin: 0 -26px; padding: 0 26px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left; }
+    thead tr { background: var(--surface-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 0.75rem; color: var(--muted); }
+    th, td { padding: 13px 12px; vertical-align: middle; }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background-color 0.14s ease; }
+    tbody tr:hover { background: var(--surface-soft); }
+    tbody tr.is-active { background: rgba(239, 233, 254, 0.7); }
+    .addr-trunc { max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.75rem; color: var(--subtle); }
+    .icon-btn {
+      background: transparent;
+      border: 0;
+      padding: 7px;
+      border-radius: 8px;
+      color: var(--subtle);
+      cursor: pointer;
+      display: inline-flex;
+      transition: background-color 0.14s ease, color 0.14s ease, transform 0.14s var(--ease);
+    }
+    .icon-btn:hover { background: var(--sage-soft); color: var(--sage); transform: scale(1.14); }
+    .icon-btn.del:hover { background: var(--red-bg); color: #b91c1c; }
+    .icon-btn:active { transform: scale(0.88); }
+
+    .mobile-history { display: none; border-top: 1px solid var(--border); }
+    .mobile-history-item { padding: 16px 0; border-bottom: 1px solid var(--border); }
+
+    .btn-danger {
+      padding: 7px 13px;
+      border-radius: 999px;
+      border: 0;
+      background: #dc2626;
+      color: #ffffff;
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-small {
+      padding: 7px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: #ffffff;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      background: #efe9fe;
+      margin-top: 32px;
+    }
+    .footer-inner {
+      max-width: 1152px;
+      margin: 0 auto;
+      padding: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* Scroll Reveal & Animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px) scale(0.98);
+      transition: opacity 0.36s var(--ease), transform 0.36s var(--ease);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 920px) {
+      .hero-top, .check-grid { grid-template-columns: 1fr; }
+      .hero-top { padding: 28px 24px; }
+      .hero-strip, .cards-grid, .diag-meta, .diag-legend { grid-template-columns: 1fr; }
+      .hero-strip { padding: 24px; }
+      .strip-stat { justify-content: flex-start; }
+      .diag-legend > div { border-right: 0; border-bottom: 1px solid var(--border); }
+      .diag-legend > div:last-child { border-bottom: 0; }
+      .mockup-stage { margin: 0 auto; }
+    }
+    @media (max-width: 760px) {
+      .nav-links { display: none; }
+      .float-chip { display: none; }
+      .desktop-history { display: none; }
+      .mobile-history { display: block; }
+      .search-box { width: 100%; }
+      .header-inner { padding: 0 16px; }
+      main { padding: 20px 16px 40px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .exam-card, .phone-frame, .float-chip, .btn-cta, .diag-banner {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="bg-orb-top" id="bg-orb-top"></div>
+    <div class="bg-orb-bottom" id="bg-orb-bottom"></div>
+  </div>
+  <header class="site-header">
+    <div class="header-inner">
+      <button type="button" id="brand-home" class="brand">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <rect x="1.25" y="1.25" width="25.5" height="25.5" rx="8" fill="#EDE5FF" stroke="#D3C2FA" stroke-width="1.25"/>
+          <path d="M14 5.25V8.25M14 19.75V22.75" stroke="#5E3EC7" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+          <circle cx="14" cy="4.75" r="1.15" fill="#5E3EC7" opacity="0.75"/>
+          <circle cx="14" cy="23.25" r="1.15" fill="#5E3EC7" opacity="0.75"/>
+          <path d="M5.5 14.5H9.2L11.6 9.2L14.4 19L16.9 12.2L18.6 14.5H22.5" stroke="#21144C" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="5.5" cy="14.5" r="1.4" fill="#5E3EC7"/>
+          <circle cx="22.5" cy="14.5" r="1.4" fill="#9A7DF9"/>
+        </svg>
+        <span>AI <span>Sehat Kamu</span></span>
+      </button>
+      <nav aria-label="Navigasi utama" class="nav-links">
+        <button type="button" class="nav-item" data-nav="menu">Menu Utama</button>
+        <button type="button" class="nav-item" data-pick="glucose">Gula Darah</button>
+        <button type="button" class="nav-item" data-pick="cholesterol">Kolesterol</button>
+        <button type="button" class="nav-item" data-pick="uric-acid">Asam Urat</button>
+        <a href="#riwayat" class="nav-item">Riwayat</a>
+      </nav>
+      <button type="button" class="btn-cta" style="padding:8px 16px;font-size:0.75rem;" id="header-start-btn">Pilih Pemeriksaan</button>
+    </div>
+    <div class="scroll-bar" id="scroll-bar" aria-hidden="true"></div>
+  </header>
+
+  <main>
+    <!-- MENU UTAMA -->
+    <div id="view-menu" style="display:flex;flex-direction:column;gap:40px;">
+      <section class="hero-card reveal is-visible" id="hero-section">
+        <div class="hero-ring-top" id="hero-ring-top" aria-hidden="true"></div>
+        <div class="hero-ring" id="hero-ring-bottom" aria-hidden="true"></div>
+        <div class="hero-top">
+          <div id="hero-copy">
+            <h1 class="hero-title">Menu Utama <span>Pemeriksaan Kesehatan</span></h1>
+            <p class="hero-desc">
+              Pilih jenis pemeriksaan yang ingin dilakukan: Gula Darah, Kolesterol Total, atau
+              Asam Urat. Masukkan hasil pengukuran Anda untuk langsung mengetahui statusnya.
+            </p>
+            <div class="hero-actions">
+              <a href="#pilih-pemeriksaan" class="btn-hero-white">Pilih Pemeriksaan</a>
+              <a href="#riwayat" class="btn-hero-glass">Lihat Riwayat</a>
+            </div>
+          </div>
+
+          <div class="mockup-stage">
+            <div class="float-chip float-left" id="float-status">
+              <div class="float-label">Status Terakhir</div>
+              <div class="float-val" id="hero-float-status">Aman</div>
+            </div>
+            <div class="float-chip float-right" id="float-menu">
+              <div class="float-label">Menu Tersedia</div>
+              <div class="float-val mono">3 Jenis Cek</div>
+            </div>
+
+            <div class="phone-frame" id="phone-mockup">
+              <div class="phone-head">
+                <div class="phone-toprow">
+                  <span id="hero-exam-label">Gula Darah</span>
+                  <span class="mono">mg/dL</span>
+                </div>
+                <div class="phone-name" id="hero-patient-name">Budi Santoso</div>
+                <div class="phone-metric-row">
+                  <span class="phone-value mono" id="hero-patient-val">92</span>
+                  <span class="status-tag green" id="hero-patient-badge">Aman</span>
+                </div>
+              </div>
+              <div class="phone-list">
+                <div class="phone-list-row"><span>Gula Darah</span><span>Tersedia</span></div>
+                <div class="phone-list-row"><span>Kolesterol Total</span><span>Tersedia</span></div>
+                <div class="phone-list-row"><span>Asam Urat</span><span>Tersedia</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-strip">
+          <div class="strip-item">
+            <span class="strip-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </span>
+            <div>
+              <h2>3 Modul Pemeriksaan</h2>
+              <p>Gula Darah, Kolesterol Total, dan Asam Urat dalam satu portal terpadu.</p>
+            </div>
+          </div>
+          <div class="strip-item">
+            <span class="strip-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            </span>
+            <div>
+              <h2>Indikator Warna Jelas</h2>
+              <p>Hijau untuk Aman, kuning untuk Rendah/Waspada, dan merah untuk Tinggi.</p>
+            </div>
+          </div>
+          <div class="strip-item">
+            <span class="strip-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </span>
+            <div>
+              <h2><span class="mono" id="total-checks-num">3</span> Riwayat Tercatat</h2>
+              <p>Total pemeriksaan yang tersimpan dan dapat ditinjau kembali kapan saja.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pilih-pemeriksaan">
+        <div class="section-head reveal">
+          <h2>Pilih Jenis <span>Pemeriksaan</span></h2>
+          <p>Klik salah satu menu pemeriksaan di bawah untuk membuka formulir deteksi.</p>
+        </div>
+
+        <div class="cards-grid">
+          <div class="exam-card reveal">
+            <div>
+              <div class="card-badge" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+              </div>
+              <h3>Pemeriksaan Gula Darah</h3>
+              <p class="card-desc">Deteksi status kadar gula darah berdasarkan hasil pengukuran dalam satuan mg/dL.</p>
+              <p class="card-meta">Klasifikasi status: Aman · Rendah · Tinggi</p>
+            </div>
+            <button type="button" class="btn-cta" data-pick="glucose">
+              <span>Pilih Gula Darah</span>
+              <span class="arrow-circle" aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+
+          <div class="exam-card card-cream reveal">
+            <div>
+              <div class="card-badge" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>
+              </div>
+              <h3>Pemeriksaan Kolesterol Total</h3>
+              <p class="card-desc">Evaluasi kadar kolesterol total untuk memantau kondisi lemak darah dalam satuan mg/dL.</p>
+              <p class="card-meta">Klasifikasi status: Aman · Waspada · Tinggi</p>
+            </div>
+            <button type="button" class="btn-cta" data-pick="cholesterol">
+              <span>Pilih Kolesterol</span>
+              <span class="arrow-circle" aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+
+          <div class="exam-card card-mint reveal">
+            <div>
+              <div class="card-badge" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+              </div>
+              <h3>Pemeriksaan Asam Urat</h3>
+              <p class="card-desc">Deteksi status kadar asam urat darah berdasarkan jenis kelamin dan nilai pengukuran.</p>
+              <p class="card-meta">Klasifikasi status: Aman · Rendah · Tinggi</p>
+            </div>
+            <button type="button" class="btn-cta" data-pick="uric-acid">
+              <span>Pilih Asam Urat</span>
+              <span class="arrow-circle" aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- HALAMAN PEMERIKSAAN -->
+    <section id="view-check" class="hidden">
+      <div class="surface-card toolbar">
+        <div class="toolbar-left">
+          <button type="button" id="btn-back-menu" class="btn-soft">&larr; Kembali ke Menu Utama</button>
+          <h1 class="toolbar-title">Pemeriksaan <span id="check-heading">Kadar Gula Darah</span></h1>
+        </div>
+        <div class="segmented" role="group" aria-label="Ganti jenis pemeriksaan">
+          <button type="button" class="seg-btn" data-switch="glucose">Gula Darah</button>
+          <button type="button" class="seg-btn" data-switch="cholesterol">Kolesterol</button>
+          <button type="button" class="seg-btn" data-switch="uric-acid">Asam Urat</button>
+        </div>
+      </div>
+
+      <div class="check-grid">
+        <section class="surface-card form-card">
+          <h2 class="panel-heading">Formulir Cek <span id="form-short">Gula Darah</span></h2>
+          <p class="panel-sub" id="form-desc">Lengkapi identitas pasien dan nilai kadar gula darah dalam mg/dL.</p>
+
+          <form id="screening-form" novalidate>
+            <div class="field">
+              <label for="nama">Nama Lengkap</label>
+              <input class="input" type="text" id="nama" required placeholder="Contoh: Siti Rahmawati" />
+              <div class="field-error hidden" id="err-nama"></div>
+            </div>
+
+            <div class="field">
+              <label for="tanggalLahir">Tanggal Lahir</label>
+              <input class="input mono" type="date" id="tanggalLahir" required />
+              <div class="field-error hidden" id="err-tanggalLahir"></div>
+            </div>
+
+            <div class="field hidden" id="field-sex">
+              <span class="field-label">Jenis Kelamin</span>
+              <div class="sex-toggle" role="group" aria-label="Jenis kelamin">
+                <button type="button" class="seg-btn active" data-sex="male">Laki-laki</button>
+                <button type="button" class="seg-btn" data-sex="female">Perempuan</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="alamat">Alamat</label>
+              <textarea class="input" id="alamat" rows="2" required placeholder="Contoh: Jl. Merdeka No. 12, Bandung"></textarea>
+              <div class="field-error hidden" id="err-alamat"></div>
+            </div>
+
+            <div class="field">
+              <label for="nilaiUkur" id="label-nilai">Kadar Gula Darah</label>
+              <div class="input-wrap">
+                <input class="input mono" type="number" id="nilaiUkur" step="0.1" min="0.1" required placeholder="Contoh: 92" />
+                <span class="unit-suffix mono">mg/dL</span>
+              </div>
+              <div class="field-hint" id="hint-nilai">Masukkan nilai hasil pengukuran dalam satuan mg/dL.</div>
+              <div class="field-error hidden" id="err-nilai"></div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-cta">Periksa</button>
+              <button type="button" id="btn-reset" class="btn-outline">Reset</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="surface-card diag-card" id="diagnosis-card" aria-live="polite"></section>
+      </div>
+    </section>
+
+    <!-- RIWAYAT PEMERIKSAAN -->
+    <section class="surface-card history-card reveal" id="riwayat">
+      <div class="history-head">
+        <div>
+          <h2 class="panel-heading">Riwayat <span>Pemeriksaan</span></h2>
+          <p class="panel-sub">Daftar seluruh pemeriksaan Gula Darah, Kolesterol, dan Asam Urat beserta hasilnya.</p>
+        </div>
+        <div class="history-controls" id="history-actions">
+          <input type="search" id="search-input" class="input search-box" placeholder="Cari nama, jenis, atau status..." aria-label="Cari riwayat pemeriksaan" />
+          <button type="button" id="btn-clear-ask" class="btn-small">Hapus Semua</button>
+          <span id="clear-confirm-wrap" class="hidden" style="display:inline-flex;gap:8px;">
+            <button type="button" id="btn-clear-yes" class="btn-danger">Konfirmasi Hapus</button>
+            <button type="button" id="btn-clear-no" class="btn-small">Batal</button>
+          </span>
+        </div>
+      </div>
+
+      <div class="history-filter-row" id="history-filter-bar">
+        <div class="segmented" role="group" aria-label="Filter jenis pemeriksaan" id="filter-buttons"></div>
+        <div class="mono" style="font-size:0.75rem;color:var(--subtle);" id="history-count-text"></div>
+      </div>
+
+      <div id="history-body"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span style="font-weight:600;color:var(--ink);">AI <span style="color:var(--sage);">Sehat Kamu</span> · Sistem Deteksi Gula Darah, Kolesterol &amp; Asam Urat</span>
+      <span>Hasil ini merupakan skrining awal dan bukan pengganti diagnosis dokter.</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var STORAGE_KEY = "gluko_cek_multi_standalone_v2";
+      var SEED_HISTORY = [
+        {
+          id: "seed-1",
+          examType: "glucose",
+          examLabel: "Gula Darah",
+          name: "Budi Santoso",
+          birthDate: "1984-08-17",
+          address: "Jl. Ahmad Yani No. 24, Semarang",
+          sex: "male",
+          value: 92,
+          status: "Aman",
+          tone: "green",
+          recommendation: "Kadar gula darah Anda berada pada kondisi aman. Pertahankan pola makan seimbang, hidrasi cukup, dan aktivitas fisik teratur.",
+          checkedAt: "2026-11-23T08:15:00.000Z"
+        },
+        {
+          id: "seed-2",
+          examType: "cholesterol",
+          examLabel: "Kolesterol",
+          name: "Ratna Dewi",
+          birthDate: "1993-02-11",
+          address: "Jl. Sudirman No. 88, Yogyakarta",
+          sex: "female",
+          value: 218,
+          status: "Waspada",
+          tone: "yellow",
+          recommendation: "Kadar kolesterol total Anda memasuki kategori waspada. Kurangi makanan berlemak jenuh serta gorengan, dan lakukan pemeriksaan berkala.",
+          checkedAt: "2026-11-23T07:40:00.000Z"
+        },
+        {
+          id: "seed-3",
+          examType: "uric-acid",
+          examLabel: "Asam Urat",
+          name: "Hendra Kusuma",
+          birthDate: "1976-12-03",
+          address: "Jl. Gatot Subroto No. 5, Surabaya",
+          sex: "male",
+          value: 8.2,
+          status: "Tinggi",
+          tone: "red",
+          recommendation: "Kadar asam urat Anda tergolong tinggi. Batasi makanan tinggi purin, perbanyak air putih, dan konsultasikan ke dokter.",
+          checkedAt: "2026-11-23T06:55:00.000Z"
+        }
+      ];
+
+      var EXAM_META = {
+        glucose: { title: "Kadar Gula Darah", short: "Gula Darah", label: "Kadar Gula Darah", placeholder: "Contoh: 92", step: "0.1" },
+        cholesterol: { title: "Kolesterol Total", short: "Kolesterol", label: "Kolesterol Total", placeholder: "Contoh: 185", step: "1" },
+        "uric-acid": { title: "Asam Urat", short: "Asam Urat", label: "Asam Urat", placeholder: "Contoh: 5.4", step: "0.1" }
+      };
+
+      var currentExam = "glucose";
+      var selectedSex = "male";
+      var activeRecord = null;
+      var filterExam = "Semua";
+      var searchQuery = "";
+      var historyList = loadHistory();
+
+      var viewMenu = document.getElementById("view-menu");
+      var viewCheck = document.getElementById("view-check");
+      var fieldSex = document.getElementById("field-sex");
+      var diagCard = document.getElementById("diagnosis-card");
+      var form = document.getElementById("screening-form");
+
+      function loadHistory() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (raw === null) return SEED_HISTORY.slice();
+          var parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : SEED_HISTORY.slice();
+        } catch (e) {
+          return SEED_HISTORY.slice();
+        }
+      }
+
+      function saveHistory() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(historyList)); } catch (e) {}
+      }
+
+      function esc(text) {
+        var d = document.createElement("div");
+        d.textContent = text;
+        return d.innerHTML;
+      }
+
+      function formatDateId(iso) {
+        var parts = String(iso || "").split("-");
+        if (parts.length !== 3) return iso || "";
+        var months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+        var m = Number(parts[1]) - 1;
+        return Number(parts[2]) + " " + (months[m] || parts[1]) + " " + parts[0];
+      }
+
+      function calcAge(iso) {
+        var parts = String(iso || "").split("-").map(Number);
+        if (parts.length !== 3) return null;
+        var now = new Date();
+        var age = now.getFullYear() - parts[0];
+        if (now.getMonth() + 1 < parts[1] || (now.getMonth() + 1 === parts[1] && now.getDate() < parts[2])) age--;
+        return age >= 0 && age <= 125 ? age : null;
+      }
+
+      function formatTime(iso) {
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return iso;
+        return d.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }) + ", " +
+          d.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+      }
+
+      function classify(exam, val, sex) {
+        if (exam === "glucose") {
+          if (val < 80) return { status: "Rendah", tone: "yellow", recommendation: "Kadar gula darah Anda tergolong rendah. Segera konsumsi asupan karbohidrat kerja cepat bila muncul gejala lemas atau pusing, dan konsultasikan ke tenaga medis." };
+          if (val > 100) return { status: "Tinggi", tone: "red", recommendation: "Kadar gula darah Anda tergolong tinggi. Pantau asupan gula sederhana, perbanyak air putih, dan lakukan evaluasi lanjutan bersama dokter." };
+          return { status: "Aman", tone: "green", recommendation: "Kadar gula darah Anda berada pada kondisi aman. Pertahankan pola makan seimbang, hidrasi cukup, dan aktivitas fisik teratur." };
+        }
+        if (exam === "cholesterol") {
+          if (val < 200) return { status: "Aman", tone: "green", recommendation: "Kadar kolesterol total Anda berada pada kondisi aman. Pertahankan konsumsi serat, sayur, dan olahraga rutin." };
+          if (val < 240) return { status: "Waspada", tone: "yellow", recommendation: "Kadar kolesterol total Anda memasuki kategori waspada. Kurangi makanan berlemak jenuh serta gorengan, dan lakukan pemeriksaan berkala." };
+          return { status: "Tinggi", tone: "red", recommendation: "Kadar kolesterol total Anda tergolong tinggi. Segera konsultasikan ke dokter untuk evaluasi profil lipid lengkap dan penanganan lanjut." };
+        }
+        var low = sex === "male" ? 3.5 : 2.6;
+        var high = sex === "male" ? 7.0 : 6.0;
+        if (val < low) return { status: "Rendah", tone: "yellow", recommendation: "Kadar asam urat Anda tergolong rendah. Pastikan asupan nutrisi tercukupi dan konsultasikan ke tenaga medis bila ada keluhan." };
+        if (val > high) return { status: "Tinggi", tone: "red", recommendation: "Kadar asam urat Anda tergolong tinggi. Batasi makanan tinggi purin (jeroan, emping, makanan laut tertentu), perbanyak air putih, dan konsultasikan ke dokter." };
+        return { status: "Aman", tone: "green", recommendation: "Kadar asam urat Anda berada pada kondisi aman. Pertahankan hidrasi yang cukup dan pola makan seimbang." };
+      }
+
+      function updateHeroPreview() {
+        var latest = activeRecord || historyList[0] || SEED_HISTORY[0];
+        document.getElementById("hero-exam-label").textContent = latest.examLabel;
+        document.getElementById("hero-patient-name").textContent = latest.name;
+        document.getElementById("hero-patient-val").textContent = latest.value;
+        var badge = document.getElementById("hero-patient-badge");
+        badge.className = "status-tag " + latest.tone;
+        badge.textContent = latest.status;
+        document.getElementById("hero-float-status").textContent = latest.status;
+        document.getElementById("total-checks-num").textContent = String(historyList.length);
+      }
+
+      function renderDiagnosis() {
+        var meta = EXAM_META[currentExam];
+        if (!activeRecord || activeRecord.examType !== currentExam) {
+          var midLabel = currentExam === "cholesterol" ? "Waspada" : "Rendah";
+          diagCard.innerHTML =
+            '<div style="padding:24px 28px;">' +
+              '<h2 class="panel-heading">Hasil Diagnosis <span>' + esc(meta.short) + '</span></h2>' +
+              '<p class="panel-sub">Status akan tampil setelah Anda melengkapi formulir dan menekan tombol Periksa.</p>' +
+            '</div>' +
+            '<div class="diag-empty-body">' +
+              '<div class="diag-empty-icon">' +
+                '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>' +
+              '</div>' +
+              '<p style="font-size:0.875rem;font-weight:600;">Siap memeriksa ' + esc(meta.label) + '</p>' +
+              '<p style="margin-top:4px;font-size:0.75rem;color:var(--subtle);max-width:340px;">Isi identitas pasien serta nilai ' + esc(meta.label.toLowerCase()) + ' (mg/dL), lalu klik <strong style="color:var(--sage);">Periksa</strong>.</p>' +
+            '</div>' +
+            '<div class="diag-legend">' +
+              '<div><p style="font-weight:600;color:var(--green-text);">Aman</p><p style="color:var(--muted);margin-top:2px;">Ditampilkan warna hijau</p></div>' +
+              '<div><p style="font-weight:600;color:var(--yellow-text);">' + midLabel + '</p><p style="color:var(--muted);margin-top:2px;">Ditampilkan warna kuning</p></div>' +
+              '<div><p style="font-weight:600;color:var(--red-text);">Tinggi</p><p style="color:var(--muted);margin-top:2px;">Ditampilkan warna merah</p></div>' +
+            '</div>';
+          return;
+        }
+
+        var rightMeta = activeRecord.examType === "uric-acid"
+          ? (activeRecord.sex === "male" ? "Laki-laki" : "Perempuan")
+          : "mg/dL";
+        var age = calcAge(activeRecord.birthDate);
+        var ageText = age !== null ? " · " + age + " tahun" : "";
+
+        diagCard.innerHTML =
+          '<div style="flex:1;display:flex;flex-direction:column;">' +
+            '<div class="diag-head">' +
+              '<div>' +
+                '<h2 class="panel-heading">Hasil Diagnosis <span>' + esc(activeRecord.examLabel) + '</span></h2>' +
+                '<p class="mono" style="margin-top:2px;font-size:0.75rem;color:var(--subtle);">Diperiksa ' + esc(formatTime(activeRecord.checkedAt)) + '</p>' +
+              '</div>' +
+              '<span style="font-size:0.75rem;font-weight:500;color:var(--sage);">' + rightMeta + '</span>' +
+            '</div>' +
+            '<div class="diag-banner ' + activeRecord.tone + '">' +
+              '<div class="diag-metrics">' +
+                '<div class="diag-status-wrap">' +
+                  '<div>' +
+                    '<p style="font-size:0.75rem;color:var(--muted);">Status ' + esc(activeRecord.examLabel) + '</p>' +
+                    '<p class="diag-status-title">' + esc(activeRecord.status) + '</p>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="diag-measure">' +
+                  '<p style="font-size:0.75rem;color:var(--muted);">Hasil Pengukuran</p>' +
+                  '<p class="diag-measure-num mono">' + activeRecord.value + '<span style="font-size:0.75rem;color:var(--subtle);margin-left:6px;">mg/dL</span></p>' +
+                '</div>' +
+              '</div>' +
+              '<p class="diag-rec">' + esc(activeRecord.recommendation) + '</p>' +
+            '</div>' +
+          '</div>' +
+          '<dl class="diag-meta">' +
+            '<div><dt>Nama Pasien</dt><dd>' + esc(activeRecord.name) + '</dd></div>' +
+            '<div><dt>Tanggal Lahir</dt><dd>' + esc(formatDateId(activeRecord.birthDate)) + '<span style="font-weight:400;color:var(--subtle);">' + ageText + '</span></dd></div>' +
+            '<div><dt>Alamat</dt><dd>' + esc(activeRecord.address) + '</dd></div>' +
+          '</dl>';
+      }
+
+      function renderHistory() {
+        var actionsEl = document.getElementById("history-actions");
+        var filterBar = document.getElementById("history-filter-bar");
+        var bodyEl = document.getElementById("history-body");
+
+        if (historyList.length === 0) {
+          actionsEl.classList.add("hidden");
+          filterBar.classList.add("hidden");
+          bodyEl.innerHTML = '<div style="padding:48px 16px;text-align:center;"><p style="font-size:0.875rem;font-weight:500;">Riwayat pemeriksaan masih kosong</p><p style="font-size:0.75rem;color:var(--subtle);margin-top:4px;">Pilih salah satu menu pemeriksaan dan klik Periksa untuk mencatat hasil pertama.</p></div>';
+          updateHeroPreview();
+          return;
+        }
+
+        actionsEl.classList.remove("hidden");
+        filterBar.classList.remove("hidden");
+
+        var counts = {
+          Semua: historyList.length,
+          glucose: historyList.filter(function (i) { return i.examType === "glucose"; }).length,
+          cholesterol: historyList.filter(function (i) { return i.examType === "cholesterol"; }).length,
+          "uric-acid": historyList.filter(function (i) { return i.examType === "uric-acid"; }).length
+        };
+
+        var tabs = [
+          { k: "Semua", l: "Semua (" + counts.Semua + ")" },
+          { k: "glucose", l: "Gula Darah (" + counts.glucose + ")" },
+          { k: "cholesterol", l: "Kolesterol (" + counts.cholesterol + ")" },
+          { k: "uric-acid", l: "Asam Urat (" + counts["uric-acid"] + ")" }
+        ];
+
+        document.getElementById("filter-buttons").innerHTML = tabs.map(function (t) {
+          return '<button type="button" class="seg-btn ' + (filterExam === t.k ? "active" : "") + '" data-filter="' + t.k + '">' + t.l + '</button>';
+        }).join("");
+
+        var q = searchQuery.trim().toLowerCase();
+        var filtered = historyList.filter(function (item) {
+          var okExam = filterExam === "Semua" || item.examType === filterExam;
+          var okQ = !q || item.name.toLowerCase().indexOf(q) !== -1 || item.address.toLowerCase().indexOf(q) !== -1 || item.examLabel.toLowerCase().indexOf(q) !== -1 || item.status.toLowerCase().indexOf(q) !== -1;
+          return okExam && okQ;
+        });
+
+        document.getElementById("history-count-text").textContent = "Menampilkan " + filtered.length + " dari " + historyList.length + " pemeriksaan";
+
+        if (filtered.length === 0) {
+          bodyEl.innerHTML = '<div style="padding:36px 16px;text-align:center;border-top:1px solid var(--border);"><p style="font-size:0.875rem;font-weight:500;">Tidak ada data yang sesuai dengan filter atau pencarian</p></div>';
+          updateHeroPreview();
+          return;
+        }
+
+        var rowsHtml = filtered.map(function (item) {
+          var age = calcAge(item.birthDate);
+          var activeCls = activeRecord && activeRecord.id === item.id ? "is-active" : "";
+          return '<tr class="' + activeCls + '">' +
+            '<td style="font-weight:600;white-space:nowrap;">' + esc(item.name) + '</td>' +
+            '<td style="font-size:0.75rem;font-weight:600;color:var(--sage-dark);white-space:nowrap;">' + esc(item.examLabel) + '</td>' +
+            '<td><div class="mono" style="font-size:0.75rem;">' + esc(formatDateId(item.birthDate)) + (age !== null ? " (" + age + " th)" : "") + '</div><div class="addr-trunc" title="' + esc(item.address) + '">' + esc(item.address) + '</div></td>' +
+            '<td class="mono" style="text-align:right;font-weight:600;white-space:nowrap;">' + item.value + ' <span style="font-size:0.75rem;font-weight:400;color:var(--subtle);">mg/dL</span></td>' +
+            '<td><span class="status-tag ' + item.tone + '">' + esc(item.status) + '</span></td>' +
+            '<td class="mono" style="font-size:0.75rem;color:var(--subtle);white-space:nowrap;">' + esc(formatTime(item.checkedAt)) + '</td>' +
+            '<td style="text-align:right;white-space:nowrap;">' +
+              '<button type="button" class="icon-btn" data-view="' + esc(item.id) + '" aria-label="Lihat detail ' + esc(item.name) + '" title="Lihat detail">' +
+                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>' +
+              '</button>' +
+              '<button type="button" class="icon-btn del" data-del="' + esc(item.id) + '" aria-label="Hapus ' + esc(item.name) + '" title="Hapus">' +
+                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>' +
+              '</button>' +
+            '</td>' +
+          '</tr>';
+        }).join("");
+
+        var mobileHtml = filtered.map(function (item) {
+          return '<div class="mobile-history-item">' +
+            '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">' +
+              '<div><p style="font-weight:600;font-size:0.875rem;">' + esc(item.name) + '</p><p style="font-size:0.75rem;color:var(--subtle);">' + esc(item.examLabel) + ' · ' + esc(formatDateId(item.birthDate)) + '</p></div>' +
+              '<span class="status-tag ' + item.tone + '">' + esc(item.status) + '</span>' +
+            '</div>' +
+            '<p style="margin-top:6px;font-size:0.75rem;color:var(--muted);">' + esc(item.address) + '</p>' +
+            '<div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;">' +
+              '<span class="mono" style="font-size:0.75rem;font-weight:600;">' + item.value + ' mg/dL <span style="font-weight:400;color:var(--subtle);">· ' + esc(formatTime(item.checkedAt)) + '</span></span>' +
+              '<span>' +
+                '<button type="button" class="icon-btn" data-view="' + esc(item.id) + '" aria-label="Lihat detail"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>' +
+                '<button type="button" class="icon-btn del" data-del="' + esc(item.id) + '" aria-label="Hapus"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>' +
+              '</span>' +
+            '</div>' +
+          '</div>';
+        }).join("");
+
+        bodyEl.innerHTML =
+          '<div class="mobile-history">' + mobileHtml + '</div>' +
+          '<div class="table-wrap desktop-history"><table>' +
+            '<thead><tr><th>Nama Pasien</th><th>Jenis Pemeriksaan</th><th>Tanggal Lahir &amp; Alamat</th><th style="text-align:right;">Hasil Ukur</th><th>Diagnosis</th><th>Waktu</th><th style="text-align:right;">Aksi</th></tr></thead>' +
+            '<tbody>' + rowsHtml + '</tbody>' +
+          '</table></div>';
+
+        updateHeroPreview();
+      }
+
+      function clearErrors() {
+        ["nama", "tanggalLahir", "alamat", "nilai"].forEach(function (k) {
+          var el = document.getElementById("err-" + k);
+          el.textContent = "";
+          el.classList.add("hidden");
+        });
+        document.getElementById("hint-nilai").classList.remove("hidden");
+        ["nama", "tanggalLahir", "alamat", "nilaiUkur"].forEach(function (id) {
+          document.getElementById(id).classList.remove("has-error");
+        });
+      }
+
+      function showErr(errId, inputId, msg) {
+        var el = document.getElementById(errId);
+        el.textContent = msg;
+        el.classList.remove("hidden");
+        document.getElementById(inputId).classList.add("has-error");
+        if (errId === "err-nilai") document.getElementById("hint-nilai").classList.add("hidden");
+      }
+
+      function openMenu() {
+        viewCheck.classList.add("hidden");
+        viewMenu.style.display = "flex";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function openExam(exam, keepRecord) {
+        currentExam = exam;
+        var meta = EXAM_META[exam];
+        var inputEl = document.getElementById("nilaiUkur");
+        document.getElementById("check-heading").textContent = meta.title;
+        document.getElementById("form-short").textContent = meta.short;
+        document.getElementById("form-desc").textContent = "Lengkapi identitas pasien dan nilai " + meta.label.toLowerCase() + " dalam mg/dL.";
+        document.getElementById("label-nilai").textContent = meta.label;
+        inputEl.placeholder = meta.placeholder;
+        inputEl.step = meta.step;
+        inputEl.min = meta.step;
+        if (!keepRecord) {
+          inputEl.value = "";
+          if (activeRecord && activeRecord.examType !== exam) activeRecord = null;
+        }
+        if (exam === "uric-acid") fieldSex.classList.remove("hidden"); else fieldSex.classList.add("hidden");
+        document.querySelectorAll("[data-switch]").forEach(function (b) {
+          b.classList.toggle("active", b.getAttribute("data-switch") === exam);
+        });
+        clearErrors();
+        renderDiagnosis();
+        viewMenu.style.display = "none";
+        viewCheck.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      document.addEventListener("click", function (e) {
+        var pick = e.target.closest("[data-pick]");
+        if (pick) { openExam(pick.getAttribute("data-pick"), false); return; }
+        var sw = e.target.closest("[data-switch]");
+        if (sw) { openExam(sw.getAttribute("data-switch"), false); return; }
+        var sx = e.target.closest("[data-sex]");
+        if (sx) {
+          selectedSex = sx.getAttribute("data-sex");
+          document.querySelectorAll("[data-sex]").forEach(function (b) { b.classList.toggle("active", b === sx); });
+          return;
+        }
+        var flt = e.target.closest("[data-filter]");
+        if (flt) { filterExam = flt.getAttribute("data-filter"); renderHistory(); return; }
+        var vw = e.target.closest("[data-view]");
+        if (vw) {
+          var id = vw.getAttribute("data-view");
+          var found = historyList.find(function (x) { return x.id === id; });
+          if (found) { activeRecord = found; openExam(found.examType, true); renderHistory(); }
+          return;
+        }
+        var dl = e.target.closest("[data-del]");
+        if (dl) {
+          var delId = dl.getAttribute("data-del");
+          historyList = historyList.filter(function (x) { return x.id !== delId; });
+          if (activeRecord && activeRecord.id === delId) activeRecord = null;
+          saveHistory();
+          renderDiagnosis();
+          renderHistory();
+        }
+      });
+
+      document.getElementById("brand-home").addEventListener("click", openMenu);
+      document.querySelector("[data-nav='menu']").addEventListener("click", openMenu);
+      document.getElementById("btn-back-menu").addEventListener("click", openMenu);
+      document.getElementById("header-start-btn").addEventListener("click", function () {
+        openMenu();
+        setTimeout(function () {
+          var sec = document.getElementById("pilih-pemeriksaan");
+          if (sec) sec.scrollIntoView({ behavior: "smooth" });
+        }, 60);
+      });
+
+      document.getElementById("search-input").addEventListener("input", function (e) {
+        searchQuery = e.target.value;
+        renderHistory();
+      });
+
+      var askBtn = document.getElementById("btn-clear-ask");
+      var confirmWrap = document.getElementById("clear-confirm-wrap");
+      askBtn.addEventListener("click", function () { askBtn.classList.add("hidden"); confirmWrap.classList.remove("hidden"); });
+      document.getElementById("btn-clear-no").addEventListener("click", function () { confirmWrap.classList.add("hidden"); askBtn.classList.remove("hidden"); });
+      document.getElementById("btn-clear-yes").addEventListener("click", function () {
+        historyList = [];
+        activeRecord = null;
+        saveHistory();
+        confirmWrap.classList.add("hidden");
+        askBtn.classList.remove("hidden");
+        renderDiagnosis();
+        renderHistory();
+      });
+
+      document.getElementById("btn-reset").addEventListener("click", function () {
+        form.reset();
+        selectedSex = "male";
+        document.querySelectorAll("[data-sex]").forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-sex") === "male"); });
+        clearErrors();
+      });
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        clearErrors();
+        var name = document.getElementById("nama").value.trim();
+        var birthDate = document.getElementById("tanggalLahir").value.trim();
+        var address = document.getElementById("alamat").value.trim();
+        var valRaw = document.getElementById("nilaiUkur").value.trim();
+        var val = Number(valRaw);
+        var hasErr = false;
+
+        if (!name) { showErr("err-nama", "nama", "Nama wajib diisi."); hasErr = true; }
+        if (!birthDate) { showErr("err-tanggalLahir", "tanggalLahir", "Tanggal lahir wajib diisi."); hasErr = true; }
+        if (!address) { showErr("err-alamat", "alamat", "Alamat wajib diisi."); hasErr = true; }
+        if (!valRaw || isNaN(val) || val <= 0) { showErr("err-nilai", "nilaiUkur", "Masukkan nilai pengukuran yang valid (> 0 mg/dL)."); hasErr = true; }
+        if (hasErr) return;
+
+        var res = classify(currentExam, val, selectedSex);
+        var rec = {
+          id: "rec-" + Date.now(),
+          examType: currentExam,
+          examLabel: EXAM_META[currentExam].short,
+          name: name,
+          birthDate: birthDate,
+          address: address,
+          sex: selectedSex,
+          value: Math.round(val * 10) / 10,
+          status: res.status,
+          tone: res.tone,
+          recommendation: res.recommendation,
+          checkedAt: new Date().toISOString()
+        };
+        activeRecord = rec;
+        historyList.unshift(rec);
+        saveHistory();
+        renderDiagnosis();
+        renderHistory();
+      });
+
+      /* Scroll progress bar + Multi-layer Parallax + Pointer Parallax */
+      var scrollBar = document.getElementById("scroll-bar");
+      var heroSection = document.getElementById("hero-section");
+      var heroCopy = document.getElementById("hero-copy");
+      var ringTop = document.getElementById("hero-ring-top");
+      var ringBottom = document.getElementById("hero-ring-bottom");
+      var phoneEl = document.getElementById("phone-mockup");
+      var floatLeft = document.getElementById("float-status");
+      var floatRight = document.getElementById("float-menu");
+      var orbTop = document.getElementById("bg-orb-top");
+      var orbBottom = document.getElementById("bg-orb-bottom");
+      var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var pointerNX = 0;
+      var pointerNY = 0;
+
+      function applyParallax() {
+        var docH = document.documentElement.scrollHeight - window.innerHeight;
+        var ratio = docH > 0 ? Math.min(1, Math.max(0, window.scrollY / docH)) : 0;
+        scrollBar.style.transform = "scaleX(" + ratio + ")";
+        if (reduceMotion) return;
+
+        var sy = window.scrollY;
+        var heroShift = Math.min(80, sy * 0.14);
+        if (orbTop) orbTop.style.transform = "translateY(" + (-ratio * 140) + "px)";
+        if (orbBottom) orbBottom.style.transform = "translateY(" + (60 - ratio * 180) + "px)";
+        if (ringTop) ringTop.style.transform = "translate3d(" + (-pointerNX * 24) + "px," + (-heroShift * 0.7) + "px,0)";
+        if (ringBottom) ringBottom.style.transform = "translate3d(" + (-pointerNX * 24) + "px," + (heroShift * 0.9) + "px,0)";
+        if (heroCopy) heroCopy.style.transform = "translateY(" + (heroShift * 0.35) + "px)";
+        if (phoneEl && !phoneEl.matches(":hover")) {
+          phoneEl.style.transform = "translate3d(" + (pointerNX * 14) + "px," + (-heroShift * 0.7 + pointerNY * 10) + "px,0)";
+        }
+        if (floatLeft && !floatLeft.matches(":hover")) {
+          floatLeft.style.transform = "translate3d(" + (pointerNX * 28) + "px," + (-heroShift * 1.05 + pointerNY * 20) + "px,0)";
+        }
+        if (floatRight && !floatRight.matches(":hover")) {
+          floatRight.style.transform = "translate3d(" + (-pointerNX * 24) + "px," + (-heroShift * 0.45 - pointerNY * 18) + "px,0)";
+        }
+      }
+
+      if (heroSection && !reduceMotion) {
+        heroSection.addEventListener("mousemove", function (e) {
+          var rect = heroSection.getBoundingClientRect();
+          pointerNX = (e.clientX - rect.left) / rect.width - 0.5;
+          pointerNY = (e.clientY - rect.top) / rect.height - 0.5;
+          applyParallax();
+        });
+        heroSection.addEventListener("mouseleave", function () {
+          pointerNX = 0;
+          pointerNY = 0;
+          applyParallax();
+        });
+      }
+
+      window.addEventListener("scroll", applyParallax, { passive: true });
+      applyParallax();
+
+      /* Scroll Reveal via IntersectionObserver */
+      if ("IntersectionObserver" in window) {
+        var obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) entry.target.classList.add("is-visible");
+            else entry.target.classList.remove("is-visible");
+          });
+        }, { threshold: 0.1 });
+        document.querySelectorAll(".reveal").forEach(function (el) { obs.observe(el); });
+      } else {
+        document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("is-visible"); });
+      }
+
+      renderDiagnosis();
+      renderHistory();
+    })();
+  </script>
+</body>
+</html>
